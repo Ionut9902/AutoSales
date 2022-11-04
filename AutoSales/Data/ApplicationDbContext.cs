@@ -27,7 +27,7 @@ namespace AutoSales.Data
         public virtual DbSet<Favourite> Favourites { get; set; } = null!;
         public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<User> MyUsers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -62,6 +62,8 @@ namespace AutoSales.Data
 
             //modelBuilder.Entity<AspNetUser>(entity =>
             //{
+            //    entity.HasKey(e => e.Id);
+
             //    entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
             //    entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")

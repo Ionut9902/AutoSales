@@ -18,6 +18,7 @@ namespace AutoSales.Models.DBObjects
         public string FirstRegistered { get; set; } = null!;
         public string Id { get; set; } = null!;
 
+
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
     }
