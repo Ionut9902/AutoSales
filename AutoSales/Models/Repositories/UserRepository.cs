@@ -4,6 +4,7 @@ using System.Diagnostics.Metrics;
 using ProiectulFinal.Models;
 using AutoSales.Models.DBObjects;
 using AutoSales.Models;
+using Microsoft.Data.SqlClient;
 
 namespace ProiectulFinal.Models.Repository
 {
@@ -24,7 +25,7 @@ namespace ProiectulFinal.Models.Repository
                 model.YearOfBirth = dbobject.YearOfBirth;
                 model.NumberOfPosts = dbobject.NumberOfPosts;
                 model.FirstRegistered = dbobject.FirstRegistered;
-                model.Id = dbobject.Id;
+                model.EmailAddress = dbobject.EmailAddress;
             }
             return model;
         }
@@ -39,7 +40,7 @@ namespace ProiectulFinal.Models.Repository
                 dbobject.YearOfBirth = model.YearOfBirth;
                 dbobject.NumberOfPosts = model.NumberOfPosts;
                 dbobject.FirstRegistered = model.FirstRegistered;
-                dbobject.Id = model.Id;
+                dbobject.EmailAddress = model.EmailAddress;
             }
             return dbobject;
         }
@@ -54,18 +55,22 @@ namespace ProiectulFinal.Models.Repository
             return list;
         }
 
-        public UserModel GetUserByID(Guid id)
+        public UserModel GetUserByID(string id)
         {
             return MapDBObjectToModel(_DBContext.MyUsers.FirstOrDefault(x => x.IdUser == id));
         }
 
         public void InsertUser(UserModel model)
         {
-            var _DBContext = new ApplicationDbContext();
-            var foreignkey = _DBContext.Users.Last().Id.ToString();
-            
-            model.IdUser = Guid.NewGuid();
-            model.Id = foreignkey;
+            var list = _DBContext.Users;            
+           
+            foreach (var dbobject in list)
+            {
+                if (dbobject.Email == model.EmailAddress)
+                {
+                    model.IdUser = dbobject.Id;
+                }
+            }
             _DBContext.MyUsers.Add(MapModelToDBObject(model));
             _DBContext.SaveChanges();
         }
@@ -80,7 +85,7 @@ namespace ProiectulFinal.Models.Repository
                 dbobject.YearOfBirth = model.YearOfBirth;
                 dbobject.NumberOfPosts = model.NumberOfPosts;
                 dbobject.FirstRegistered = model.FirstRegistered;
-                dbobject.Id = model.Id;
+                dbobject.EmailAddress = model.EmailAddress;
                 _DBContext.SaveChanges();
             }
 

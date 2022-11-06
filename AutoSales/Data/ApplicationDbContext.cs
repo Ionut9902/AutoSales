@@ -62,8 +62,6 @@ namespace AutoSales.Data
 
             //modelBuilder.Entity<AspNetUser>(entity =>
             //{
-            //    entity.HasKey(e => e.Id);
-
             //    entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
             //    entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
@@ -130,11 +128,12 @@ namespace AutoSales.Data
             //        .WithMany(p => p.AspNetUserTokens)
             //        .HasForeignKey(d => d.UserId);
             //});
-
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Favourite>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.Property(e => e.IdUser).HasMaxLength(450);
 
                 entity.HasOne(d => d.IdPostNavigation)
                     .WithMany()
@@ -157,6 +156,8 @@ namespace AutoSales.Data
                 entity.ToTable("Message");
 
                 entity.Property(e => e.IdMessage).ValueGeneratedNever();
+
+                entity.Property(e => e.IdUser).HasMaxLength(450);
 
                 entity.Property(e => e.Text)
                     .HasMaxLength(1000)
@@ -204,6 +205,8 @@ namespace AutoSales.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.IdUser).HasMaxLength(450);
+
                 entity.Property(e => e.Location)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -235,17 +238,18 @@ namespace AutoSales.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.IdUser)
-                    .HasName("PK__User__B7C926384188101F");
+                    .HasName("PK__tmp_ms_x__B7C92638D7A4BBD0");
 
                 entity.ToTable("User");
 
-                entity.Property(e => e.IdUser).ValueGeneratedNever();
+                entity.Property(e => e.EmailAddress)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("emailAddress");
 
                 entity.Property(e => e.FirstRegistered)
                     .HasMaxLength(10)
                     .IsFixedLength();
-
-                entity.Property(e => e.Id).HasMaxLength(450);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)

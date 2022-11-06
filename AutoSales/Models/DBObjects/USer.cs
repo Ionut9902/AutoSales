@@ -11,13 +11,12 @@ namespace AutoSales.Models.DBObjects
             Posts = new HashSet<Post>();
         }
 
-        public Guid IdUser { get; set; }
+        public string? IdUser { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string YearOfBirth { get; set; } = null!;
         public string? NumberOfPosts { get; set; }
         public string FirstRegistered { get; set; } = null!;
-        public string Id { get; set; } = null!;
-
+        public string EmailAddress { get; set; } = null!;
 
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Post> Posts { get; set; }

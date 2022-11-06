@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using AutoSales.Areas.Identity.Pages.Account;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AutoSales.Controllers
 {
@@ -49,11 +51,12 @@ namespace AutoSales.Controllers
                 var model = new UserModel();
                 var task = TryUpdateModelAsync(model);
                 task.Wait();
+             
                 if (task.Result)
-                {
+                {   
                     _userRepository.InsertUser(model);
                 }
-                return View("Create");
+                return RedirectToAction("Index","Home");
             }
             catch
             {
