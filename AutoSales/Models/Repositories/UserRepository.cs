@@ -5,6 +5,8 @@ using ProiectulFinal.Models;
 using AutoSales.Models.DBObjects;
 using AutoSales.Models;
 using Microsoft.Data.SqlClient;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProiectulFinal.Models.Repository
 {
@@ -55,22 +57,16 @@ namespace ProiectulFinal.Models.Repository
             return list;
         }
 
-        public UserModel GetUserByID(string id)
+        public UserModel GetUserByID(Guid id)
         {
             return MapDBObjectToModel(_DBContext.MyUsers.FirstOrDefault(x => x.IdUser == id));
         }
 
         public void InsertUser(UserModel model)
         {
-            var list = _DBContext.Users;            
+            var list = _DBContext.Users;    
            
-            foreach (var dbobject in list)
-            {
-                if (dbobject.Email == model.EmailAddress)
-                {
-                    model.IdUser = dbobject.Id;
-                }
-            }
+            model.IdUser = Guid.NewGuid();
             _DBContext.MyUsers.Add(MapModelToDBObject(model));
             _DBContext.SaveChanges();
         }

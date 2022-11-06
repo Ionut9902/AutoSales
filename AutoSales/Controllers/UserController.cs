@@ -11,6 +11,8 @@ using AutoSales.Areas.Identity.Pages.Account;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Security.Claims;
+
 
 namespace AutoSales.Controllers
 {
@@ -37,7 +39,8 @@ namespace AutoSales.Controllers
         // GET: UserController/Create
         public ActionResult Create()
         {
-            return View("Create");
+
+            return View("Create");       
         }
 
         // POST: UserController/Create
@@ -49,11 +52,18 @@ namespace AutoSales.Controllers
             try
             {
                 var model = new UserModel();
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    var emailUri = User.FindFirst(ClaimTypes.Email);
+                    var email = emailUri.ToString().Substring(68);
+                    model.EmailAddress = email;
+                }
                 var task = TryUpdateModelAsync(model);
                 task.Wait();
              
                 if (task.Result)
-                {   
+                {
                     _userRepository.InsertUser(model);
                 }
                 return RedirectToAction("Index","Home");

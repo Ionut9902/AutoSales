@@ -11,7 +11,7 @@ namespace AutoSales.Models.DBObjects
             Posts = new HashSet<Post>();
         }
 
-        public string? IdUser { get; set; } = null!;
+        public Guid IdUser { get; set; }
         public string Name { get; set; } = null!;
         public string YearOfBirth { get; set; } = null!;
         public string? NumberOfPosts { get; set; }

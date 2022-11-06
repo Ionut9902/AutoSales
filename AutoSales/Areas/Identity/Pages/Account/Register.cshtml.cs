@@ -146,7 +146,7 @@ namespace AutoSales.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToAction("Create","User");
+                        return RedirectToPage("Login","Identity/Account");
                     }
                     else
                     {

@@ -16,7 +16,9 @@
         public string NumberOfDoors { get; set; } = null!;
         public string Colour { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string IdUser { get; set; }
+        public Guid IdUser { get; set; }
+        public string Image { get; set; } = null!;
+
         public string Location { get; set; } = null!;
     }
 }

@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using ProiectulFinal.Models.Repository;
+using AutoSales.Data;
 
 namespace AutoSales.Areas.Identity.Pages.Account
 {
@@ -23,12 +25,14 @@ namespace AutoSales.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ApplicationDbContext _dbContext;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, UserManager<IdentityUser> userManager)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, UserManager<IdentityUser> userManager, ApplicationDbContext dbContext)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -120,9 +124,17 @@ namespace AutoSales.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     var roles = await _userManager.GetRolesAsync(user);
+                    var list = _dbContext.MyUsers.ToList();
                     if (roles.Contains("User"))
                     {
-                        return RedirectToAction("Index","Home");
+                            if(list.FirstOrDefault(x=> x.EmailAddress == Input.Email) == null)
+                        {
+                            return RedirectToAction("Create", "User");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                     return LocalRedirect(returnUrl);
                 }

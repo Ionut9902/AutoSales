@@ -24,8 +24,9 @@ namespace AutoSales.Models.DBObjects
         public string NumberOfDoors { get; set; } = null!;
         public string Colour { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string IdUser { get; set; } = null!;
+        public Guid IdUser { get; set; }
         public string Location { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         public virtual User IdUserNavigation { get; set; } = null!;
         public virtual ICollection<Message> Messages { get; set; }

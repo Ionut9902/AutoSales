@@ -4,7 +4,7 @@ namespace AutoSales.Models
 {
     public class UserModel
     {
-        public string? IdUser { get; set; }
+        public Guid IdUser { get; set; }
         public string Name { get; set; } = null!;
         public string YearOfBirth { get; set; } = null!;
         public string? NumberOfPosts { get; set; }
