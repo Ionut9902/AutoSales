@@ -89,6 +89,7 @@ namespace ProiectulFinal.Models.Repository
 
         public void UpdatePost(PostModel model)
         {
+            var _postRepository = new PostRepository(_DBContext);
             var dbobject = _DBContext.Posts.FirstOrDefault(x => x.IdPost == model.IdPost);
             if (dbobject != null)
             {
@@ -115,9 +116,9 @@ namespace ProiectulFinal.Models.Repository
 
         }
 
-        public void DeletePost(PostModel model)
+        public void DeletePost(Guid Id)
         {
-            var dbobject = _DBContext.Posts.FirstOrDefault(x => x.IdPost == model.IdPost);
+            var dbobject = _DBContext.Posts.FirstOrDefault(x => x.IdPost == Id);
             if (dbobject != null)
             {
                 _DBContext.Posts.Remove(dbobject);

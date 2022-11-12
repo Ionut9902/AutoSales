@@ -7,6 +7,7 @@ namespace AutoSales.Models.DBObjects
     {
         public User()
         {
+            Favourites = new HashSet<Favourite>();
             Messages = new HashSet<Message>();
             Posts = new HashSet<Post>();
         }
@@ -18,6 +19,7 @@ namespace AutoSales.Models.DBObjects
         public string FirstRegistered { get; set; } = null!;
         public string EmailAddress { get; set; } = null!;
 
+        public virtual ICollection<Favourite> Favourites { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
     }

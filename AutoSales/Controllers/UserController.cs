@@ -12,11 +12,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Security.Claims;
-
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AutoSales.Controllers
 {
-    
+    [Authorize(Roles = "User")]
     public class UserController : Controller
     {
         private UserRepository _userRepository;

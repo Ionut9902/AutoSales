@@ -132,16 +132,18 @@ namespace AutoSales.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Favourite>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.IdFavourite);
+
+                entity.Property(e => e.IdFavourite).ValueGeneratedNever();
 
                 entity.HasOne(d => d.IdPostNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Favourites)
                     .HasForeignKey(d => d.IdPost)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Favourites_Post");
 
                 entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany()
+                    .WithMany(p => p.Favourites)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Favourites_User");

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AutoSales.Data;
 using System.Diagnostics.Metrics;
-using ProiectulFinal.Models;
 using AutoSales.Models.DBObjects;
 using AutoSales.Models;
 using Microsoft.Data.SqlClient;
@@ -61,6 +60,12 @@ namespace ProiectulFinal.Models.Repository
         {
             return MapDBObjectToModel(_DBContext.MyUsers.FirstOrDefault(x => x.IdUser == id));
         }
+
+        public UserModel GetUserByEmail(string email)
+        {
+            return MapDBObjectToModel(_DBContext.MyUsers.FirstOrDefault(x => x.EmailAddress == email));
+        }
+
 
         public void InsertUser(UserModel model)
         {
