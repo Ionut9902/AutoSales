@@ -178,7 +178,7 @@ namespace AutoSales.Data
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.HasKey(e => e.IdPost)
-                    .HasName("PK__Post__F8DCBD4D4DB0B5B9");
+                    .HasName("PK__tmp_ms_x__F8DCBD4D30F8B06B");
 
                 entity.ToTable("Post");
 
@@ -196,9 +196,7 @@ namespace AutoSales.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EngineCapacity)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.FirstRegistration).HasColumnType("date");
 
                 entity.Property(e => e.FuelType)
                     .HasMaxLength(50)
@@ -216,9 +214,7 @@ namespace AutoSales.Data
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NumberOfDoors)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Price).HasColumnType("money");
 
                 entity.Property(e => e.VehicleType)
                     .HasMaxLength(50)
@@ -246,17 +242,11 @@ namespace AutoSales.Data
                     .IsUnicode(false)
                     .HasColumnName("emailAddress");
 
-                entity.Property(e => e.FirstRegistered)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.FirstRegistered).HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.NumberOfPosts)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
 
                 entity.Property(e => e.YearOfBirth)
                     .HasMaxLength(10)

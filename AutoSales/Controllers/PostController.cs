@@ -5,8 +5,9 @@ using MessagePack.Formatters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using ProiectulFinal.Models.Repository;
+using AutoSales.Models.Repository;
 using System.Data;
 using System.Security.Claims;
 
@@ -41,8 +42,8 @@ namespace AutoSales.Controllers
         [Authorize(Roles = "User")]
 
         public ActionResult Create()
-        {
-            return View("Create");
+        {   
+                return View("Create");
         }
 
         // POST: PostController/Create
@@ -55,16 +56,17 @@ namespace AutoSales.Controllers
                 var model = new PostModel();
                 if (User.Identity.IsAuthenticated)
                 {
-                    var emailUri = User.FindFirst(ClaimTypes.Email);
-                    var email = emailUri.ToString().Substring(68);
-                    var user = _userRepository.GetUserByEmail(email);
+                    var user = _userRepository.GetUserByEmail(User.Identity.Name);
                     model.IdUser = user.IdUser;
                 }
+                var usermodel = _userRepository.GetUserByID(model.IdUser);
                 var task = TryUpdateModelAsync(model);
                 task.Wait();
                 if (task.Result)
                 {
                     _postRepository.InsertPost(model);
+                    usermodel.NumberOfPosts++;
+                    _userRepository.UpdateUser(usermodel);
                 }
                 return RedirectToAction("Index");
             }
@@ -136,18 +138,16 @@ namespace AutoSales.Controllers
                 if (User.Identity.IsAuthenticated)
                 {
                     var post = _postRepository.GetPostByID(Id);
-                    var emailUri = User.FindFirst(ClaimTypes.Email);
-                    var email = emailUri.ToString().Substring(68);
-                    var user = _userRepository.GetUserByEmail(email);
+                    var user = _userRepository.GetUserByEmail(User.Identity.Name);
                     if (user.IdUser == post.IdUser)
                     {
                         _postRepository.DeletePost(Id);
-
                     }
 
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
+            
             catch
             { 
                 return View("Delete", Id); 
@@ -159,15 +159,41 @@ namespace AutoSales.Controllers
             
             if (User.Identity.IsAuthenticated)
             {
+                var listOfUsers = _userRepository.GetAllUsers().ToList();
+                var list = _DbContext.Favourites.ToList();
                 var favourite = new Favourite();
-                var emailUri = User.FindFirst(ClaimTypes.Email);
-                var email = emailUri.ToString().Substring(68);
+         
+                var email = User.Identity.Name;
                 var user = _userRepository.GetUserByEmail(email);
-                favourite.IdUser = user.IdUser;
-                favourite.IdPost = Id;
-                favourite.IdFavourite = Guid.NewGuid();
-                _DbContext.Favourites.Add(favourite);
-                _DbContext.SaveChanges();
+                bool alreadyIn = false;
+                bool userExists = false;
+                foreach(var favouriteItem in list)
+                {
+                    if(favouriteItem.IdPost == Id && user.IdUser == favouriteItem.IdUser)
+                    {
+                        alreadyIn = true;
+                    }
+                }
+                foreach(var userItem in listOfUsers)
+                {
+                    if(userItem.IdUser == user.IdUser)
+                    {
+                        userExists = true;
+                    }
+                }
+                if (alreadyIn == false && userExists == true)
+                {
+                    favourite.IdUser = user.IdUser;
+                    favourite.IdPost = Id;
+                    favourite.IdFavourite = Guid.NewGuid();
+                    _DbContext.Favourites.Add(favourite);
+                    _DbContext.SaveChanges();
+                }
+                else if(userExists == false)
+                {
+                    return RedirectToAction("Create", "User");
+                }
+                             
             }
 
             return RedirectToAction("Index", "Post");
@@ -181,14 +207,15 @@ namespace AutoSales.Controllers
 
                 if (User.Identity.IsAuthenticated)
                 {
-                    var email = User.Identity.Name.ToString();
+                    var email = User.Identity.Name;
                     var user = _userRepository.GetUserByEmail(email);
                     var list = _DbContext.Favourites.ToList();
                     foreach(var favourite in list)
                     {
                         if (favourite.IdUser == user.IdUser)
                         {
-                            var list2 = _DbContext.Favourites.ToList();
+                            var list2 = new List<Favourite>();
+                            list2.Add(favourite);
                             foreach(var item in list2)
                             {
                                listOfPosts.Add(_postRepository.GetPostByID(item.IdPost));
@@ -202,6 +229,50 @@ namespace AutoSales.Controllers
             {
                 return View("Index");
             }
+        }
+        [Authorize(Roles = "User")]
+        public ActionResult MyPostsIndex()
+        {
+            try
+            {
+                var list = _postRepository.GetAllPosts();
+                var listOfUserPosts = new List<PostModel>();
+            if (User.Identity.IsAuthenticated)
+                {
+                    var user = _userRepository.GetUserByEmail(User.Identity.Name);
+                    foreach (var post in list)
+                    {
+                        if (post.IdUser == user.IdUser)
+                        {
+                            listOfUserPosts.Add(post);
+                        }
+                    }
+                }
+            return View(listOfUserPosts);
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
+        public ActionResult RemoveFromFavourites(Guid id)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var favourites = _DbContext.Favourites.ToList();
+                var email = User.Identity.Name.ToString();
+                var user = _userRepository.GetUserByEmail(email);
+                
+                foreach(Favourite favourite in favourites)
+                {
+                    if(user.IdUser == favourite.IdUser && id == favourite.IdPost)
+                    {
+                        _DbContext.Favourites.Remove(favourite);
+                        _DbContext.SaveChanges();
+                    }
+                }
+            }
+            return RedirectToAction("FavouriteIndex");
         }
     }
 }

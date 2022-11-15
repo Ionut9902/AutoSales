@@ -4,7 +4,7 @@ using System.Diagnostics.Metrics;
 using AutoSales.Models;
 using AutoSales.Models.DBObjects;
 
-namespace ProiectulFinal.Models.Repository
+namespace AutoSales.Models.Repository
 {
     public class PostRepository
     {
@@ -121,6 +121,12 @@ namespace ProiectulFinal.Models.Repository
             var dbobject = _DBContext.Posts.FirstOrDefault(x => x.IdPost == Id);
             if (dbobject != null)
             {
+                var favourites = _DBContext.Favourites.Where(x => x.IdPost == Id).ToList();
+
+                foreach (var favourite in favourites)
+                {
+                    _DBContext.Favourites.Remove(favourite);
+                }
                 _DBContext.Posts.Remove(dbobject);
                 _DBContext.SaveChanges();
             }

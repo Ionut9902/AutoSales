@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using ProiectulFinal.Models.Repository;
+using AutoSales.Models.Repository;
 using AutoSales.Data;
 
 namespace AutoSales.Areas.Identity.Pages.Account

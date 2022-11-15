@@ -1,0 +1,51 @@
+﻿@model IEnumerable<AutoSales.Models.MessageModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>My Messages</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+          @*  <th>
+                @Html.DisplayNameFor(model => model.IdMessage)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Text)
+            </th>
+          @*  <th>
+                @Html.DisplayNameFor(model => model.IdUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPost)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+           @* <td>
+                @Html.DisplayFor(modelItem => item.IdMessage)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+           @* <td>
+                @Html.DisplayFor(modelItem => item.IdUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPost)
+            </td>*@
+            <td>
+                @Html.ActionLink("Details", "Details", new { id=item.IdMessage  }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.IdMessage })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

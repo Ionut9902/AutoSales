@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
-namespace ProiectulFinal.Models.Repository
+namespace AutoSales.Models.Repository
 {
     public class UserRepository
     {

@@ -16,3 +16,32 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.post-img-container {
+    width: 20rem;
+    height: 15rem;
+    overflow: hidden;
+}
+
+.post-img {
+    height: 100%;
+    width: 100%;
+    object-fit: scale-down;
+}
+
+.post-img-container-details {
+    width: 30rem;
+    height: 25rem;
+    overflow: hidden;
+}
+
+.post-img-container-favourites {
+    width: 30rem;
+    height: 25rem;
+    overflow: hidden;
+}
+.post-img-container-Myposts {
+    width: 20rem;
+    height: 15rem;
+    overflow: hidden;
+}

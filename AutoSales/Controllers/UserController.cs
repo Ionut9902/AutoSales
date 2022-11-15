@@ -3,7 +3,7 @@ using AutoSales.Models;
 using AutoSales.Models.DBObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProiectulFinal.Models.Repository;
+using AutoSales.Models.Repository;
 using System.Drawing.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
@@ -56,10 +56,12 @@ namespace AutoSales.Controllers
 
                 if (User.Identity.IsAuthenticated)
                 {
-                    var emailUri = User.FindFirst(ClaimTypes.Email);
-                    var email = emailUri.ToString().Substring(68);
+                    
+                    var email = User.Identity.Name;
                     model.EmailAddress = email;
                 }
+                model.FirstRegistered = DateTime.Now;
+                model.NumberOfPosts = 0;
                 var task = TryUpdateModelAsync(model);
                 task.Wait();
              
