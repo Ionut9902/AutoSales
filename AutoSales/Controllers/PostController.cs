@@ -97,9 +97,7 @@ namespace AutoSales.Controllers
                 if (User.Identity.IsAuthenticated)
                 {
                     var post = _postRepository.GetPostByID(id);
-                    var emailUri = User.FindFirst(ClaimTypes.Email);
-                    var email = emailUri.ToString().Substring(68);
-                    var user = _userRepository.GetUserByEmail(email);
+                    var user = _userRepository.GetUserByEmail(User.Identity.Name);
                     if(user.IdUser == post.IdUser)
                     {
                         var model = new PostModel();

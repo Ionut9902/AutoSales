@@ -32,9 +32,15 @@ namespace AutoSales.Controllers
         }
 
         // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details()
         {
-            return View();
+            var model = new UserModel();
+            if (User.Identity.IsAuthenticated)
+            {
+                var email = User.Identity.Name;
+                model = _userRepository.GetUserByEmail(email);
+            }
+            return View("Details", model);
         }
 
         // GET: UserController/Create
@@ -78,23 +84,39 @@ namespace AutoSales.Controllers
         }
 
         // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var model = _userRepository.GetUserByID(id);
+            return View("Edit", model);
         }
 
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = _userRepository.GetUserByEmail(User.Identity.Name);
+                    var model = new UserModel();
+                    var task = TryUpdateModelAsync(model);
+                    model.IdUser = id;
+                    model.NumberOfPosts = user.NumberOfPosts;
+                    model.FirstRegistered = user.FirstRegistered;
+                    model.EmailAddress = user.EmailAddress;
+                    task.Wait();
+                    if (task.Result)
+                    {
+                        _userRepository.UpdateUser(model);
+                    }
+                }
+                return RedirectToAction("Details");
             }
             catch
             {
-                return View();
+                return View("Edit", id);
             }
         }
 

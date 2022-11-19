@@ -13,6 +13,6 @@ namespace AutoSales.Models
         public string YearOfBirth { get; set; } = null!;
         public int? NumberOfPosts { get; set; }
         public DateTime FirstRegistered { get; set; }
-        public string EmailAddress { get; set; } = null!;
+        public string? EmailAddress { get; set; }
     }
 }
